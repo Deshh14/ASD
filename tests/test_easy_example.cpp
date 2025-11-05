@@ -2,8 +2,12 @@
 
 #include <gtest/gtest.h>
 #include "../lib_easy_example/easy_example.h"
-
+#include "string"
+#include "list.h"
+#include <string>
 #define EPSILON 0.000001
+
+
 
 TEST(TestEasyExampleLib, can_div) {
   // Arrange
