@@ -1,6 +1,9 @@
 #ifndef LIST_H
 #define LIST_H
 
+#include <stdexcept>
+#include <algorithm>
+
 template<typename T>
 class List {
 private:
@@ -35,6 +38,7 @@ public:
     public:
         Iterator(Node* node);
         T& operator*();
+        T* operator->();  // Добавлен оператор ->
         Iterator& operator++();
         Iterator operator++(int);
         bool operator==(const Iterator& other) const;
@@ -139,7 +143,14 @@ List<T>::Iterator::Iterator(Node* node) : current(node) {}
 
 template<typename T>
 T& List<T>::Iterator::operator*() {
+    if (!current) throw std::runtime_error("Dereferencing end iterator");
     return current->data;
+}
+
+template<typename T>
+T* List<T>::Iterator::operator->() {
+    if (!current) throw std::runtime_error("Accessing member of end iterator");
+    return &(current->data);
 }
 
 template<typename T>
@@ -341,10 +352,10 @@ void List<T>::unique() {
         }
     }
 }
+
 template<typename T>
 void List<T>::sort() {
     if (size() <= 1) return;
-
 
     bool swapped;
     do {
