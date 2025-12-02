@@ -1,6 +1,9 @@
 #ifndef LIST_H
 #define LIST_H
 
+#include <utility> 
+#include <stdexcept>
+
 template<typename T>
 class List {
 private:
@@ -33,16 +36,67 @@ public:
     private:
         Node* current;
     public:
-        Iterator(Node* node);
-        T& operator*();
-        Iterator& operator++();
-        Iterator operator++(int);
-        bool operator==(const Iterator& other) const;
-        bool operator!=(const Iterator& other) const;
+        Iterator(Node* node = nullptr) : current(node) {}
+
+        T& operator*() const {
+            if (current == nullptr) {
+                throw std::runtime_error("Dereferencing end iterator");
+            }
+            return current->data;
+        }
+
+        T* operator->() const {
+            if (current == nullptr) {
+                throw std::runtime_error("Accessing member through end iterator");
+            }
+            return &current->data;
+        }
+
+        Iterator& operator++() {
+            if (current) {
+                current = current->next;
+            }
+            return *this;
+        }
+
+        Iterator operator++(int) {
+            Iterator temp = *this;
+            ++(*this);
+            return temp;
+        }
+
+        Iterator& operator--() {
+            if (current) {
+                current = current->prev;
+            }
+            // Для end() итератора это не сработает корректно
+            // Нужно получить доступ к tail из List
+            return *this;
+        }
+
+        Iterator operator--(int) {
+            Iterator temp = *this;
+            --(*this);
+            return temp;
+        }
+
+        bool operator==(const Iterator& other) const {
+            return current == other.current;
+        }
+
+        bool operator!=(const Iterator& other) const {
+            return current != other.current;
+        }
+
+        friend class List;
     };
 
-    Iterator begin();
-    Iterator end();
+    Iterator begin() { return Iterator(head); }
+    Iterator end() { return Iterator(nullptr); }
+
+    // УБРАТЬ эти константные версии - они вызывают конфликт
+    // Iterator begin() const { return Iterator(head); }
+    // Iterator end() const { return Iterator(nullptr); }
 
     bool empty() const;
     size_t size() const;
@@ -132,47 +186,6 @@ template<typename T>
 const T& List<T>::back() const {
     if (empty()) throw std::runtime_error("List is empty");
     return tail->data;
-}
-
-template<typename T>
-List<T>::Iterator::Iterator(Node* node) : current(node) {}
-
-template<typename T>
-T& List<T>::Iterator::operator*() {
-    return current->data;
-}
-
-template<typename T>
-typename List<T>::Iterator& List<T>::Iterator::operator++() {
-    if (current) current = current->next;
-    return *this;
-}
-
-template<typename T>
-typename List<T>::Iterator List<T>::Iterator::operator++(int) {
-    Iterator temp = *this;
-    ++(*this);
-    return temp;
-}
-
-template<typename T>
-bool List<T>::Iterator::operator==(const Iterator& other) const {
-    return current == other.current;
-}
-
-template<typename T>
-bool List<T>::Iterator::operator!=(const Iterator& other) const {
-    return current != other.current;
-}
-
-template<typename T>
-typename List<T>::Iterator List<T>::begin() {
-    return Iterator(head);
-}
-
-template<typename T>
-typename List<T>::Iterator List<T>::end() {
-    return Iterator(nullptr);
 }
 
 template<typename T>
@@ -278,18 +291,19 @@ typename List<T>::Iterator List<T>::erase(Iterator position) {
 
     if (current == head) {
         pop_front();
+        return Iterator(head); // возвращаем новый head
     }
     else if (current == tail) {
         pop_back();
+        return end(); // после удаления tail возвращаем end()
     }
     else {
         current->prev->next = current->next;
         current->next->prev = current->prev;
         delete current;
         --list_size;
+        return Iterator(next_node);
     }
-
-    return Iterator(next_node);
 }
 
 template<typename T>
@@ -341,10 +355,10 @@ void List<T>::unique() {
         }
     }
 }
+
 template<typename T>
 void List<T>::sort() {
     if (size() <= 1) return;
-
 
     bool swapped;
     do {
