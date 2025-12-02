@@ -18,6 +18,7 @@ add_subdirectory(lib_queue)
 add_subdirectory(lib_stack)
 add_subdirectory(lib_list)
 add_subdirectory(lib_Tvector)
+add_subdirectory(lib_dsu)
 add_subdirectory(Algorithms)
 
 

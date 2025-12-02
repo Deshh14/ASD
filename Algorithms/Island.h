@@ -1,16 +1,16 @@
-#pragma once
 #include "TVector.h"
 
-class IslandMetricsAnalyzer {
-    Tvector<Tvector<int>> dataMap;
-    int verticalDimension;
-    int horizontalDimension;
+class IslandCounter {
+private:
+    Tvector<Tvector<int>> _grid;
+    int _rows;
+    int _cols;
 
-    bool coordinatesWithinBounds(int x, int y) const;
-    int convertToLinearCoordinate(int x, int y) const;
+    bool isInBounds(int row, int col) const;
+    int convertToFlatIndex(int row, int col) const;
 
 public:
-    explicit IslandMetricsAnalyzer(const Tvector<Tvector<int>>& inputMatrix);
+    IslandCounter(const Tvector<Tvector<int>>& grid);
 
-    int computeConnectedComponents();
-};s
+    int calculateIslands();
+};
