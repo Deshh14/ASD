@@ -29,7 +29,7 @@ std::map<std::string, double> readVariables() {
             size_t equalsPos = pair.find('=');
             if (equalsPos != std::string::npos) {
                 std::string name = pair.substr(0, equalsPos);
-                // Удаление пробелов
+               
                 name.erase(0, name.find_first_not_of(" \t"));
                 name.erase(name.find_last_not_of(" \t") + 1);
 
@@ -74,7 +74,7 @@ int main() {
     do {
         displayMenu();
         std::cin >> choice;
-        std::cin.ignore(); // Игнорируем оставшийся символ новой строки
+        std::cin.ignore(); 
 
         switch (choice) {
         case 1: {
@@ -95,7 +95,7 @@ int main() {
             int id;
             std::cout << "Enter expression ID: ";
             std::cin >> id;
-            std::cin.ignore(); // Игнорируем оставшийся символ новой строки
+            std::cin.ignore(); 
 
             if (calculator.expressionExists(id)) {
                 std::map<std::string, double> variables = readVariables();

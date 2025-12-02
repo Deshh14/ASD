@@ -3,7 +3,7 @@
 
 #include "lexem.h"
 #include "List.h"
-#include "Tvector.h"  // Используем Tvector вместо vector
+#include "Tvector.h"  
 #include <string>
 #include <map>
 #include <iostream>

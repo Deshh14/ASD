@@ -30,7 +30,7 @@ List<Lexem> Parser::parse(const std::string& expression) {
                     lexems.push_back(funcLexem);
                 }
                 else {
-                    // Это переменная
+                    
                     pos -= potentialFunc.length();
                     processVariable(expression, pos, lexems);
                 }
