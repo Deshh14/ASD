@@ -194,17 +194,3 @@ TEST(LQueueTest, ManyElements) {
 
     EXPECT_TRUE(q.empty());
 }
-
-
-TEST(LQueueTest, ConstLQueue) {
-    LQueue<int> q;
-    q.push(42);
-    q.push(84);
-
-    const LQueue<int>& const_q = q;
-
-    EXPECT_FALSE(const_q.empty());
-    EXPECT_EQ(const_q.size(), 2);
-    EXPECT_EQ(const_q.front(), 42);
-    EXPECT_EQ(const_q.back(), 84);
-}

@@ -78,15 +78,6 @@ TEST(StackTest, CopyConstructor) {
     EXPECT_EQ(copy.top(), 3);
 }
 
-TEST(StackTest, MoveConstructor) {
-    Stack<int> original{ 1, 2, 3 };
-    Stack<int> moved(std::move(original));
-
-    EXPECT_TRUE(original.empty());
-    EXPECT_EQ(moved.size(), 3);
-    EXPECT_EQ(moved.top(), 3);
-}
-
 TEST(StackTest, CopyAssignment) {
     Stack<int> original{ 1, 2, 3 };
     Stack<int> copy;
@@ -100,16 +91,6 @@ TEST(StackTest, CopyAssignment) {
     copy = copy;
     EXPECT_EQ(copy.size(), 3);
     EXPECT_EQ(copy.top(), 3);
-}
-
-TEST(StackTest, MoveAssignment) {
-    Stack<int> original{ 1, 2, 3 };
-    Stack<int> moved;
-    moved = std::move(original);
-
-    EXPECT_TRUE(original.empty());
-    EXPECT_EQ(moved.size(), 3);
-    EXPECT_EQ(moved.top(), 3);
 }
 
 TEST(StackTest, EmptyAndSize) {

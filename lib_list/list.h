@@ -69,8 +69,6 @@ public:
             if (current) {
                 current = current->prev;
             }
-            // Для end() итератора это не сработает корректно
-            // Нужно получить доступ к tail из List
             return *this;
         }
 
@@ -94,9 +92,7 @@ public:
     Iterator begin() { return Iterator(head); }
     Iterator end() { return Iterator(nullptr); }
 
-    // УБРАТЬ эти константные версии - они вызывают конфликт
-    // Iterator begin() const { return Iterator(head); }
-    // Iterator end() const { return Iterator(nullptr); }
+   
 
     bool empty() const;
     size_t size() const;
@@ -291,11 +287,11 @@ typename List<T>::Iterator List<T>::erase(Iterator position) {
 
     if (current == head) {
         pop_front();
-        return Iterator(head); // возвращаем новый head
+        return Iterator(head);
     }
     else if (current == tail) {
         pop_back();
-        return end(); // после удаления tail возвращаем end()
+        return end(); 
     }
     else {
         current->prev->next = current->next;

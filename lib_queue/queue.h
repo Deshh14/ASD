@@ -10,7 +10,7 @@ private:
     size_t backIndex;
     size_t queueSize;
 
-    void resize();
+    
 
 public:
     Queue();
@@ -24,7 +24,7 @@ public:
     const T& front() const;
     T& back();
     const T& back() const;
-
+    bool isFull() const;
     bool empty() const;
     size_t size() const;
     size_t getCapacity() const;
@@ -34,7 +34,7 @@ public:
 
 template<typename T>
 Queue<T>::Queue()
-    : capacity(10), frontIndex(0), backIndex(0), queueSize(0) {
+    : capacity(100),  frontIndex(0), backIndex(0), queueSize(0) {
     data = new T[capacity];
 }
 
@@ -75,26 +75,18 @@ Queue<T>::~Queue() {
     delete[] data;
 }
 
+
 template<typename T>
-void Queue<T>::resize() {
-    size_t newCapacity = capacity * 2;
-    T* newData = new T[newCapacity];
-
-    for (size_t i = 0; i < queueSize; ++i) {
-        newData[i] = data[(frontIndex + i) % capacity];
-    }
-
-    delete[] data;
-    data = newData;
-    capacity = newCapacity;
-    frontIndex = 0;
-    backIndex = queueSize;
+bool Queue<T>::isFull() const {
+    return queueSize == capacity;
 }
+
+
 
 template<typename T>
 void Queue<T>::push(const T& value) {
-    if (queueSize == capacity) {
-        resize();
+    if (isFull()) {
+        throw std::overflow_error("Queue overflow");
     }
 
     data[backIndex] = value;
