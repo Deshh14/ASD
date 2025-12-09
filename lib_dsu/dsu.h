@@ -16,30 +16,34 @@ DSU::DSU(size_t size) : _size(size) {
 	_rank = new int[_size];
 	for (int i = 0; i < _size; i++) {
 		_parent[i] = i;
+		_rank[i] = 0;
 	}
 }
 
 DSU::~DSU() {
 	delete[] _parent;
+	delete[] _rank;
 }
 
 int DSU::find(int x) {
-	if (_parent[x] == x) {
-		return x;
+	if (_parent[x] != x) {                  
+		_parent[x] = find(_parent[x]);
 	}
-	else {
-		return find(_parent[x]);
-	}
+	return _parent[x];
 }
 
-void DSU::unite(int x1, int x2) {
-	if (_rank[x1] < _rank[x2]) {
-		_parent[x1] = find(x2);
+void DSU::unite(int a, int b) {
+	int rootA = find(a);
+	int rootB = find(b);
+	if (rootA == rootB) return;
+	if (_rank[rootA] < _rank[rootB]) {
+		_parent[rootA] = rootB;
+	}
+	else if (_rank[rootA] > _rank[rootB]) {
+		_parent[rootB] = rootA;
 	}
 	else {
-		if (_rank[x1] == _rank[x2]) {
-			_rank[x1]++;
-		}
-		_parent[x2] = find(x1);
+		_parent[rootB] = rootA;
+		_rank[rootA]++;
 	}
 }
