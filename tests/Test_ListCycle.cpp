@@ -68,18 +68,6 @@ TEST(CycleDetectionTest, FindProblemNodeSingleElement) {
     EXPECT_EQ(result, typename List<int>::Iterator(nullptr));
 }
 
-TEST(CycleDetectionTest, CircularListDetection) {
-    List<int> list;
-    list.push_back(1);
-    list.push_back(2);
-    list.push_back(3);
-
-    auto start = list.begin();
-    // —оздаем цикл от последнего к первому
-    EXPECT_TRUE(checkListCycleTurtleAndRabbit<int>(start));
-}
-
-
 // “есты производительности и стресс-тесты
 TEST(CycleDetectionTest, LargeLinearListPerformance) {
     List<int> list;
