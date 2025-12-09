@@ -1,3 +1,3 @@
 #include "ListCycle.h"
-#include "Algorithms.h"
-#include "list.h"
+#include "../Algorithms/algorithms.h"
+#include "../lib_list/list.h"

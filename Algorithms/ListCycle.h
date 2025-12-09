@@ -10,11 +10,9 @@ bool checkListCycleTurtleAndRabbit(const typename List<T>::Iterator& start) {
     auto rabbit = start;
 
     while (rabbit != typename List<T>::Iterator(nullptr)) {
-        // Двигаем черепаху на 1 шаг
         auto turtle_next = turtle;
         ++turtle_next;
 
-        // Двигаем зайца на 2 шага
         auto rabbit_next = rabbit;
         ++rabbit_next;
         if (rabbit_next == typename List<T>::Iterator(nullptr)) {
@@ -32,23 +30,75 @@ bool checkListCycleTurtleAndRabbit(const typename List<T>::Iterator& start) {
 
     return false;
 }
-
-template<typename T>
-bool checkListCyclePointer(const typename List<T>::Iterator& start) {
-    if (start == typename List<T>::Iterator(nullptr)) {
+/*
+template <typename T>
+bool checkListCyclePointer(Node<T>* head) {
+    if (head == nullptr || head->_next == nullptr) {
         return false;
     }
 
-    // Для алгоритма с изменением указателей нам нужен доступ к узлам
-    // В текущей реализации List нет публичных методов для работы с указателями на Node
-    // Поэтому этот метод не может быть корректно реализован без изменения класса List
+    Node<T>* current = head;    
+    Node<T>* prev = nullptr;      
+    Node<T>* next = nullptr;      
+    Node<T>* first = head;        
+    bool has_cycle = false;       
 
-    return false; // Заглушка - требуется доработка архитектуры
+    while (current != nullptr) {
+        next = current->_next;
+
+        current->_next = prev;
+
+        if (next == first) {
+            has_cycle = true;
+            break;
+        }
+
+        prev = current;
+        current = next;
+    }
+
+
+    if (has_cycle) {
+        // current указывает на узел перед началом цикла
+        // prev указывает на последний обработанный узел
+
+        // Восстанавливаем от prev до начала
+        Node<T>* restore_curr = prev;
+        Node<T>* restore_prev = nullptr;
+
+        while (restore_curr != nullptr && restore_curr != current) {
+            Node<T>* temp = restore_curr->_next;
+            restore_curr->_next = restore_prev;
+            restore_prev = restore_curr;
+            restore_curr = temp;
+        }
+
+        // Восстанавливаем связь с current
+        if (current != nullptr) {
+            current->_next = restore_prev;
+        }
+    }
+    // Если цикла не было - полностью развернули список, нужно восстановить
+    else {
+        // prev теперь указывает на последний узел развернутого списка
+        current = prev;
+        prev = nullptr;
+
+        // Разворачиваем список обратно
+        while (current != nullptr) {
+            next = current->_next;
+            current->_next = prev;
+            prev = current;
+            current = next;
+        }
+    }
+
+    return has_cycle;
 }
-
+*/
 template<typename T>
 typename List<T>::Iterator FindProblemNode(const typename List<T>::Iterator& start) {
-    // Проверяем есть ли цикл
+
     auto turtle = start;
     auto rabbit = start;
     bool has_cycle = false;
@@ -77,7 +127,6 @@ typename List<T>::Iterator FindProblemNode(const typename List<T>::Iterator& sta
         return typename List<T>::Iterator(nullptr);
     }
 
-    // Находим начало цикла
     turtle = start;
 
     while (turtle != rabbit) {
@@ -91,6 +140,6 @@ typename List<T>::Iterator FindProblemNode(const typename List<T>::Iterator& sta
         rabbit = rabbit_next;
     }
 
-    // Возвращаем итератор на узел, который является началом цикла
+
     return turtle;
 }
