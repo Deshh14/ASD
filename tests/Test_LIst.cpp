@@ -63,65 +63,79 @@ TEST(ListTest, ClearRemovesAllElements) {
     EXPECT_TRUE(list.empty());
     EXPECT_EQ(list.size(), 0);
 }
-
-TEST(IteratorTest, BeginPointsToFirstElement) {
+// Тест 1: Чтение из пустого списка
+TEST(ListIteratorTest, EmptyListIteration) {
     List<int> list;
-    list.push_back(10);
-    list.push_back(20);
 
-    auto it = list.begin();
-    EXPECT_EQ(*it, 10);
+    EXPECT_EQ(list.begin(), list.end());
+
+    auto it = list.end();
+    EXPECT_THROW(*it, std::runtime_error);
+    EXPECT_THROW(it.operator->(), std::runtime_error);
+
+    auto it2 = list.end();
+    ++it2;
+    EXPECT_EQ(it2, list.end());
+
+    auto it3 = list.end();
+    it3++;
+    EXPECT_EQ(it3, list.end());
 }
 
-TEST(IteratorTest, IncrementMovesToNextElement) {
-    List<int> list;
-    list.push_back(10);
-    list.push_back(20);
-    list.push_back(30);
-
-    auto it = list.begin();
-    ++it;
-    EXPECT_EQ(*it, 20);
-
-    it++;
-    EXPECT_EQ(*it, 30);
-}
-
-TEST(IteratorTest, RangeBasedForWorks) {
+// Тест 2: Запись через итератор в непустом списке
+TEST(ListIteratorTest, WriteThroughIterator) {
     List<int> list;
     list.push_back(1);
     list.push_back(2);
     list.push_back(3);
 
-    int sum = 0;
-    for (int val : list) {
-        sum += val;
-    }
+    auto it = list.begin();
+    *it = 10;
+    EXPECT_EQ(list.front(), 10);
 
-    EXPECT_EQ(sum, 6); 
+    auto last_it = list.begin();
+    ++last_it; ++last_it;
+    *last_it = 30;
+    EXPECT_EQ(list.back(), 30);
+
+    auto mid_it = list.begin();
+    ++mid_it;
+    *mid_it = 20;
+
+    auto check_it = list.begin();
+    EXPECT_EQ(*check_it, 10);
+    ++check_it;
+    EXPECT_EQ(*check_it, 20);
+    ++check_it;
+    EXPECT_EQ(*check_it, 30);
 }
 
-TEST(IteratorTest, InsertAndEraseWithIterators) {
+
+// Тест 3: Обратный ход итератора (декремент)
+TEST(ListIteratorTest, ReverseIteration) {
     List<int> list;
     list.push_back(1);
+    list.push_back(2);
     list.push_back(3);
 
     auto it = list.begin();
     ++it;
-    list.insert(it, 2);
+    EXPECT_EQ(*it, 2);
 
-    std::vector<int> expected = { 1, 2, 3 };
-    std::vector<int> result;
-    for (int val : list) {
-        result.push_back(val);
-    }
-    EXPECT_EQ(result, expected);
+    --it;
+    EXPECT_EQ(*it, 1);
 
-    it = list.begin();
-    ++it;
-    list.erase(it); 
+    ++it; ++it; 
+    EXPECT_EQ(*it, 3);
 
-    EXPECT_EQ(list.size(), 2);
-    EXPECT_EQ(list.front(), 1);
-    EXPECT_EQ(list.back(), 3);
+    --it;
+    EXPECT_EQ(*it, 2);
+
+    auto it2 = list.begin();
+    --it2;
+    EXPECT_EQ(it2, list.end());
+
+    auto it3 = list.end();
+    ++it3;
+    EXPECT_EQ(it3, list.end());
 }

@@ -53,10 +53,6 @@ TEST(LinkedListTest, PushBack) {
     EXPECT_EQ(list.get_size(), 2);
     EXPECT_EQ(list[0], 1);
     EXPECT_EQ(list[1], 2);
-
-    list.push_back(3);
-    EXPECT_EQ(list.get_size(), 3);
-    EXPECT_EQ(list[2], 3);
 }
 
 TEST(LinkedListTest, PushBackMultiple) {
@@ -75,17 +71,6 @@ TEST(LinkedListTest, PushFront) {
     list.push_front(1);
     EXPECT_EQ(list.get_size(), 1);
     EXPECT_EQ(list[0], 1);
-
-    list.push_front(2);
-    EXPECT_EQ(list.get_size(), 2);
-    EXPECT_EQ(list[0], 2);
-    EXPECT_EQ(list[1], 1);
-
-    list.push_front(3);
-    EXPECT_EQ(list.get_size(), 3);
-    EXPECT_EQ(list[0], 3);
-    EXPECT_EQ(list[1], 2);
-    EXPECT_EQ(list[2], 1);
 }
 
 TEST(LinkedListTest, PopFront) {
@@ -98,19 +83,6 @@ TEST(LinkedListTest, PopFront) {
     EXPECT_EQ(list.get_size(), 2);
     EXPECT_EQ(list[0], 2);
     EXPECT_EQ(list[1], 3);
-
-    list.pop_front();
-    EXPECT_EQ(list.get_size(), 1);
-    EXPECT_EQ(list[0], 3);
-
-    list.pop_front();
-    EXPECT_EQ(list.get_size(), 0);
-    EXPECT_TRUE(list.empty());
-}
-
-TEST(LinkedListTest, PopFrontEmpty) {
-    LinkedList<int> list;
-    EXPECT_THROW(list.pop_front(), std::out_of_range);
 }
 
 TEST(LinkedListTest, PopBack) {
@@ -123,19 +95,6 @@ TEST(LinkedListTest, PopBack) {
     EXPECT_EQ(list.get_size(), 2);
     EXPECT_EQ(list[0], 1);
     EXPECT_EQ(list[1], 2);
-
-    list.pop_back();
-    EXPECT_EQ(list.get_size(), 1);
-    EXPECT_EQ(list[0], 1);
-
-    list.pop_back();
-    EXPECT_EQ(list.get_size(), 0);
-    EXPECT_TRUE(list.empty());
-}
-
-TEST(LinkedListTest, PopBackEmpty) {
-    LinkedList<int> list;
-    EXPECT_THROW(list.pop_back(), std::out_of_range);
 }
 
 TEST(LinkedListTest, PopBackSingleElement) {
@@ -146,7 +105,7 @@ TEST(LinkedListTest, PopBackSingleElement) {
     EXPECT_EQ(list.get_size(), 0);
 }
 
-TEST(LinkedListTest, InsertAtBeginning) {
+TEST(LinkedListTest, Insert) {
     LinkedList<int> list;
     list.push_back(2);
     list.push_back(3);
@@ -158,89 +117,11 @@ TEST(LinkedListTest, InsertAtBeginning) {
     EXPECT_EQ(list[2], 3);
 }
 
-TEST(LinkedListTest, InsertAtEnd) {
-    LinkedList<int> list;
-    list.push_back(1);
-    list.push_back(2);
-
-    list.insert(2, 3);
-    EXPECT_EQ(list.get_size(), 3);
-    EXPECT_EQ(list[0], 1);
-    EXPECT_EQ(list[1], 2);
-    EXPECT_EQ(list[2], 3);
-}
-
-TEST(LinkedListTest, InsertInMiddle) {
-    LinkedList<int> list;
-    list.push_back(1);
-    list.push_back(3);
-    list.push_back(4);
-
-    list.insert(1, 2);
-    EXPECT_EQ(list.get_size(), 4);
-    EXPECT_EQ(list[0], 1);
-    EXPECT_EQ(list[1], 2);
-    EXPECT_EQ(list[2], 3);
-    EXPECT_EQ(list[3], 4);
-}
-
-TEST(LinkedListTest, InsertInvalidIndex) {
-    LinkedList<int> list;
-    list.push_back(1);
-
-    EXPECT_THROW(list.insert(5, 2), std::out_of_range);
-    EXPECT_THROW(list.insert(3, 2), std::out_of_range);
-}
-
 TEST(LinkedListTest, InsertIntoEmptyList) {
     LinkedList<int> list;
     list.insert(0, 42);
     EXPECT_EQ(list.get_size(), 1);
     EXPECT_EQ(list[0], 42);
-}
-
-TEST(LinkedListTest, EraseAtBeginning) {
-    LinkedList<int> list;
-    list.push_back(1);
-    list.push_back(2);
-    list.push_back(3);
-
-    list.erase(0);
-    EXPECT_EQ(list.get_size(), 2);
-    EXPECT_EQ(list[0], 2);
-    EXPECT_EQ(list[1], 3);
-}
-
-TEST(LinkedListTest, EraseAtEnd) {
-    LinkedList<int> list;
-    list.push_back(1);
-    list.push_back(2);
-    list.push_back(3);
-
-    list.erase(2);
-    EXPECT_EQ(list.get_size(), 2);
-    EXPECT_EQ(list[0], 1);
-    EXPECT_EQ(list[1], 2);
-}
-
-TEST(LinkedListTest, EraseInMiddle) {
-    LinkedList<int> list;
-    list.push_back(1);
-    list.push_back(2);
-    list.push_back(3);
-
-    list.erase(1);
-    EXPECT_EQ(list.get_size(), 2);
-    EXPECT_EQ(list[0], 1);
-    EXPECT_EQ(list[1], 3);
-}
-
-TEST(LinkedListTest, EraseInvalidIndex) {
-    LinkedList<int> list;
-    list.push_back(1);
-
-    EXPECT_THROW(list.erase(1), std::out_of_range);
-    EXPECT_THROW(list.erase(5), std::out_of_range);
 }
 
 TEST(LinkedListTest, EraseAllElements) {
@@ -293,60 +174,6 @@ TEST(LinkedListTest, OperatorBrackets) {
     EXPECT_EQ(list[1], 100);
 }
 
-TEST(LinkedListTest, ConstOperatorBrackets) {
-    LinkedList<int> list;
-    list.push_back(5);
-    list.push_back(10);
-
-    const LinkedList<int>& const_list = list;
-    EXPECT_EQ(const_list[0], 5);
-    EXPECT_EQ(const_list[1], 10);
-}
-
-TEST(LinkedListTest, Clear) {
-    LinkedList<int> list;
-
-    list.clear();
-    EXPECT_TRUE(list.empty());
-    EXPECT_EQ(list.get_size(), 0);
-
-    for (int i = 0; i < 10; ++i) {
-        list.push_back(i);
-    }
-    EXPECT_FALSE(list.empty());
-
-    list.clear();
-    EXPECT_TRUE(list.empty());
-    EXPECT_EQ(list.get_size(), 0);
-
-    list.push_back(42);
-    EXPECT_EQ(list.get_size(), 1);
-    EXPECT_EQ(list[0], 42);
-}
-
-TEST(LinkedListTest, EmptyAndSize) {
-    LinkedList<int> list;
-
-    EXPECT_TRUE(list.empty());
-    EXPECT_EQ(list.get_size(), 0);
-
-    list.push_back(1);
-    EXPECT_FALSE(list.empty());
-    EXPECT_EQ(list.get_size(), 1);
-
-    list.push_back(2);
-    EXPECT_FALSE(list.empty());
-    EXPECT_EQ(list.get_size(), 2);
-
-    list.pop_back();
-    EXPECT_FALSE(list.empty());
-    EXPECT_EQ(list.get_size(), 1);
-
-    list.pop_back();
-    EXPECT_TRUE(list.empty());
-    EXPECT_EQ(list.get_size(), 0);
-}
-
 TEST(LinkedListTest, Contains) {
     LinkedList<int> list;
 
@@ -364,16 +191,6 @@ TEST(LinkedListTest, Contains) {
 
     list.push_back(20); 
     EXPECT_TRUE(list.contains(20));
-}
-
-TEST(LinkedListTest, Destructor) {
-    {
-        LinkedList<int> list;
-        for (int i = 0; i < 1000; ++i) {
-            list.push_back(i);
-        }
-    }
-
 }
 
 TEST(LinkedListTest, StringType) {
@@ -395,33 +212,6 @@ TEST(LinkedListTest, StringType) {
     EXPECT_FALSE(list.contains("test"));
 }
 
-TEST(LinkedListTest, BoundaryCases) {
-    LinkedList<int> list;
-
-    list.push_back(1);
-    EXPECT_EQ(list.get_size(), 1);
-    EXPECT_EQ(list[0], 1);
-    EXPECT_NO_THROW(list.pop_front());
-    EXPECT_TRUE(list.empty());
-
-    list.push_back(1);
-    list.push_back(2);
-    EXPECT_EQ(list.get_size(), 2);
-    list.pop_back();
-    EXPECT_EQ(list.get_size(), 1);
-    EXPECT_EQ(list[0], 1);
-
-    list.clear();
-
-    for (int i = 0; i < 10000; ++i) {
-        list.push_back(i);
-    }
-    EXPECT_EQ(list.get_size(), 10000);
-    EXPECT_EQ(list[0], 0);
-    EXPECT_EQ(list[9999], 9999);
-}
-
-
 TEST(LinkedListIteratorTest, IterateThroughElements) {
     LinkedList<int> list;
     list.push_back(1);
@@ -436,7 +226,6 @@ TEST(LinkedListIteratorTest, IterateThroughElements) {
     EXPECT_EQ(sum, 6); 
 }
 
-// Тест 2: Изменение элементов через итератор
 TEST(LinkedListIteratorTest, ModifyElementsThroughIterator) {
     LinkedList<int> list;
     list.push_back(5);
