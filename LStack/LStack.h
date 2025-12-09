@@ -20,8 +20,6 @@ public:
 
     Stack(const Stack& other) : list(other.list) {}
 
-    Stack(Stack&& other) noexcept : list(std::move(other.list)) {}
-
     Stack& operator=(const Stack& other) {
         if (this != &other) {
             list = other.list;
@@ -29,19 +27,8 @@ public:
         return *this;
     }
 
-    Stack& operator=(Stack&& other) noexcept {
-        if (this != &other) {
-            list = std::move(other.list);
-        }
-        return *this;
-    }
-
     void push(const T& value) {
         list.push_back(value);
-    }
-
-    void push(T&& value) {
-        list.push_back(std::move(value));
     }
 
     void pop() {
@@ -101,11 +88,6 @@ public:
 
     bool operator!=(const Stack& other) const {
         return !(*this == other);
-    }
-
-    template<typename... Args>
-    void emplace(Args&&... args) {
-        list.push_back(T(std::forward<Args>(args)...));
     }
 
     const List<T>& get_list() const { return list; }

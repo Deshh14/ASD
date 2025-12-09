@@ -154,40 +154,6 @@ TEST(StackTest, EqualityOperator) {
     EXPECT_TRUE(stack1 != stack4);
 }
 
-TEST(StackTest, Emplace) {
-    Stack<std::string> stack;
-
-    stack.emplace("hello");
-    EXPECT_EQ(stack.top(), "hello");
-
-    stack.emplace(5, 'a'); 
-    EXPECT_EQ(stack.top(), "aaaaa");
-
-    stack.emplace("world");
-    EXPECT_EQ(stack.top(), "world");
-}
-
-struct Point {
-    int x, y;
-    Point(int x, int y) : x(x), y(y) {}
-    bool operator==(const Point& other) const {
-        return x == other.x && y == other.y;
-    }
-};
-
-TEST(StackTest, CustomType) {
-    Stack<Point> stack;
-
-    stack.emplace(1, 2);
-    stack.emplace(3, 4);
-
-    EXPECT_EQ(stack.size(), 2);
-    EXPECT_EQ(stack.top(), Point(3, 4));
-
-    stack.pop();
-    EXPECT_EQ(stack.top(), Point(1, 2));
-}
-
 TEST(StackTest, OutputOperator) {
     Stack<int> stack{ 1, 2, 3 };
     std::stringstream ss;
