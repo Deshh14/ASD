@@ -14,6 +14,7 @@ private:
     size_t size;
 
 public:
+    class Iterator;
     LinkedList();
     LinkedList(const LinkedList& other);
     ~LinkedList();
@@ -35,7 +36,65 @@ public:
     size_t get_size() const;
     void print() const;
     bool contains(const T& value) const;
+    Iterator begin();
+    Iterator end();
+    class Iterator {
+    private:
+        Node* current;
+
+    public:
+        Iterator(Node* node) : current(node) {}
+
+        // Операция разыменования
+        T& operator*() {
+            assert(current != nullptr && "Dereferencing end iterator");
+            return current->data;
+        }
+
+        T* operator->() {
+            assert(current != nullptr && "Dereferencing end iterator");
+            return &(current->data);
+        }
+
+        // Префиксный инкремент
+        Iterator& operator++() {
+            assert(current != nullptr && "Incrementing end iterator");
+            current = current->next;
+            return *this;
+        }
+
+        // Постфиксный инкремент
+        Iterator operator++(int) {
+            assert(current != nullptr && "Incrementing end iterator");
+            Iterator temp = *this;
+            current = current->next;
+            return temp;
+        }
+
+        // Операторы сравнения
+        bool operator==(const Iterator& other) const {
+            return current == other.current;
+        }
+
+        bool operator!=(const Iterator& other) const {
+            return !(*this == other);
+        }
+
+        friend class LinkedList<T>;
+    };
 };
+
+template<typename T>
+typename LinkedList<T>::Iterator LinkedList<T>::begin() {
+    return Iterator(head);
+}
+
+template<typename T>
+typename LinkedList<T>::Iterator LinkedList<T>::end() {
+    return Iterator(nullptr);
+}
+
+
 
 template<typename T>
 LinkedList<T>::LinkedList() : head(nullptr), size(0) {}

@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include "LinkedList.h"
 
-// Тесты для конструкторов
 TEST(LinkedListTest, DefaultConstructor) {
     LinkedList<int> list;
     EXPECT_TRUE(list.empty());
@@ -367,17 +366,14 @@ TEST(LinkedListTest, Contains) {
     EXPECT_TRUE(list.contains(20));
 }
 
-// Тесты для деструктора (косвенно через RAII)
 TEST(LinkedListTest, Destructor) {
     {
         LinkedList<int> list;
         for (int i = 0; i < 1000; ++i) {
             list.push_back(i);
         }
-    } // Деструктор вызывается здесь
+    }
 
-    // Если деструктор работает правильно, не должно быть утечек памяти
-    // Это проверяется инструментами анализа памяти
 }
 
 TEST(LinkedListTest, StringType) {
@@ -399,18 +395,15 @@ TEST(LinkedListTest, StringType) {
     EXPECT_FALSE(list.contains("test"));
 }
 
-// Тест на граничные случаи
 TEST(LinkedListTest, BoundaryCases) {
     LinkedList<int> list;
 
-    // Один элемент
     list.push_back(1);
     EXPECT_EQ(list.get_size(), 1);
     EXPECT_EQ(list[0], 1);
     EXPECT_NO_THROW(list.pop_front());
     EXPECT_TRUE(list.empty());
 
-    // Два элемента
     list.push_back(1);
     list.push_back(2);
     EXPECT_EQ(list.get_size(), 2);
@@ -420,11 +413,39 @@ TEST(LinkedListTest, BoundaryCases) {
 
     list.clear();
 
-    // Большое количество элементов
     for (int i = 0; i < 10000; ++i) {
         list.push_back(i);
     }
     EXPECT_EQ(list.get_size(), 10000);
     EXPECT_EQ(list[0], 0);
     EXPECT_EQ(list[9999], 9999);
+}
+
+
+TEST(LinkedListIteratorTest, IterateThroughElements) {
+    LinkedList<int> list;
+    list.push_back(1);
+    list.push_back(2);
+    list.push_back(3);
+
+    int sum = 0;
+    for (auto it = list.begin(); it != list.end(); ++it) {
+        sum += *it;
+    }
+
+    EXPECT_EQ(sum, 6); 
+}
+
+// Тест 2: Изменение элементов через итератор
+TEST(LinkedListIteratorTest, ModifyElementsThroughIterator) {
+    LinkedList<int> list;
+    list.push_back(5);
+    list.push_back(10);
+
+    for (auto it = list.begin(); it != list.end(); ++it) {
+        *it = *it * 2;
+    }
+
+    EXPECT_EQ(list.at(0), 10); 
+    EXPECT_EQ(list.at(1), 20);
 }
