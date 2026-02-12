@@ -4,6 +4,10 @@
 #include <utility> 
 #include <stdexcept>
 
+//убрать лишние опер в частн различные случ at sort и прочие
+// в листе должны быть оптимизированные реализ
+//допокрывать тестами которые покроют все
+
 template<typename T>
 class List {
 private:
@@ -91,6 +95,15 @@ public:
 
     Iterator begin() { return Iterator(head); }
     Iterator end() { return Iterator(nullptr); }
+
+    Iterator rbegin() {
+        return Iterator(tail);
+    }
+
+
+    Iterator rend() {
+        return Iterator(nullptr);
+    }
 
    
 

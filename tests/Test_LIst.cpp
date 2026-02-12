@@ -139,3 +139,17 @@ TEST(ListIteratorTest, ReverseIteration) {
     ++it3;
     EXPECT_EQ(it3, list.end());
 }
+
+TEST(ListIteratorTest, RbeginRend) {
+    List<int> list;
+    list.push_back(1);
+    list.push_back(2);
+    list.push_back(3);
+    list.push_back(4);
+    int i = 4;
+    for (auto it = list.rbegin(); it != list.rend(); --it) {
+        
+        EXPECT_EQ(*it, i);
+        --i;
+    }
+}

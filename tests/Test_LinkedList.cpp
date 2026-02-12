@@ -238,3 +238,13 @@ TEST(LinkedListIteratorTest, ModifyElementsThroughIterator) {
     EXPECT_EQ(list.at(0), 10); 
     EXPECT_EQ(list.at(1), 20);
 }
+
+TEST(LinkedList, EmptyAndPush) {
+    LinkedList<int> list;
+    list.push_front(5);
+    list.push_back(10);
+
+    EXPECT_EQ(list.at(0), 5);
+    EXPECT_EQ(list.at(1), 10);
+
+}

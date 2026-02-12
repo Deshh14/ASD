@@ -11,6 +11,7 @@ private:
     };
 
     Node* head;
+    Node* tail;
     size_t size;
 
 public:
@@ -97,10 +98,10 @@ typename LinkedList<T>::Iterator LinkedList<T>::end() {
 
 
 template<typename T>
-LinkedList<T>::LinkedList() : head(nullptr), size(0) {}
+LinkedList<T>::LinkedList() : head(nullptr), tail(nullptr), size(0) {}
 
 template<typename T>
-LinkedList<T>::LinkedList(const LinkedList& other) : head(nullptr), size(0) {
+LinkedList<T>::LinkedList(const LinkedList& other) : head(nullptr), tail(nullptr), size(0) {
     Node* current = other.head;
     while (current) {
         push_back(current->data);
@@ -131,14 +132,11 @@ void LinkedList<T>::push_back(const T& value) {
     Node* newNode = new Node(value);
 
     if (!head) {
-        head = newNode;
+        head = tail = newNode;
     }
     else {
-        Node* current = head;
-        while (current->next) {
-            current = current->next;
-        }
-        current->next = newNode;
+        tail->next = newNode;
+        tail = newNode;
     }
     size++;
 }
@@ -146,8 +144,15 @@ void LinkedList<T>::push_back(const T& value) {
 template<typename T>
 void LinkedList<T>::push_front(const T& value) {
     Node* newNode = new Node(value);
-    newNode->next = head;
-    head = newNode;
+
+    if (!head) {
+        head = tail = newNode;
+    }
+    else {
+        newNode->next = head;
+        head = newNode;
+    }
+
     size++;
 }
 
@@ -171,7 +176,7 @@ void LinkedList<T>::pop_back() {
 
     if (!head->next) {
         delete head;
-        head = nullptr;
+        head = tail = nullptr;
     }
     else {
         Node* current = head;
@@ -180,6 +185,7 @@ void LinkedList<T>::pop_back() {
         }
         delete current->next;
         current->next = nullptr;
+        tail = current;
     }
     size--;
 }
@@ -212,12 +218,18 @@ void LinkedList<T>::insert(size_t index, const T& value) {
 
 template<typename T>
 void LinkedList<T>::erase(size_t index) {
+    if (!head) {
+        throw std::out_of_range("List is empty");
+    }
     if (index >= size) {
         throw std::out_of_range("Index out of range");
     }
 
     if (index == 0) {
         pop_front();
+    }
+    else if (index == size - 1) {
+        pop_back();
     }
     else {
         Node* current = head;
@@ -277,6 +289,7 @@ void LinkedList<T>::clear() {
         head = head->next;
         delete temp;
     }
+    tail = nullptr;
     size = 0;
 }
 
