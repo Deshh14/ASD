@@ -18,7 +18,10 @@ add_subdirectory(lib_queue)
 add_subdirectory(lib_stack)
 add_subdirectory(lib_list)
 add_subdirectory(LStack)
-
+add_subdirectory(lib_TVector)
+add_subdirectory(lib_skipList)
+add_subdirectory(UnsortedTableOnVec)
+add_subdirectory(ITable)
 
 add_subdirectory(Algorithms)
 
