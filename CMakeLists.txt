@@ -21,6 +21,7 @@ add_subdirectory(LStack)
 add_subdirectory(lib_TVector)
 add_subdirectory(lib_skipList)
 add_subdirectory(UnsortedTableOnVec)
+add_subdirectory(SortedTableOnVec)
 add_subdirectory(ITable)
 
 add_subdirectory(Algorithms)
