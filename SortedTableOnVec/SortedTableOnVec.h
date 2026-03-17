@@ -4,51 +4,89 @@
 #include <iostream>
 #include <utility>
 #include <stdexcept>
+#include <algorithm>
 
 template<typename TKey, typename TVal>
-class UnsortedTableOnVec : public ITable<TKey, TVal> {
+class SortedTableOnVec : public ITable<TKey, TVal> {
     Tvector<std::pair<TKey, TVal>> _rows;
 
-    int find_index(const TKey& key) const noexcept;
+    int binary_search(const TKey& key) const noexcept;
+    int find_insert_position(const TKey& key) const noexcept;
 
 public:
-    UnsortedTableOnVec() = default;
-    ~UnsortedTableOnVec() = default;
+    SortedTableOnVec() = default;
+    ~SortedTableOnVec() = default;
 
     void insert(const TKey& key, const TVal& val) override;
     TVal find(const TKey& key) const override;
     void erase(const TKey& key) override;
     std::ostream& print(std::ostream& out) const noexcept override;
     bool is_empty() const noexcept override;
-    bool contains(const TKey& key) const noexcept override;
-    int size() const noexcept override;
+    bool consist(const TKey& key) const noexcept override;  
+    int size(const TKey& key) const noexcept override;      
+    int size() const noexcept;                               
     void replace(const TKey& key, const TVal& val) override;
 
     Tvector<TKey> get_keys() const;
     Tvector<TVal> get_values() const;
+    TKey get_min_key() const;
+    TKey get_max_key() const;
 };
 
 template<typename TKey, typename TVal>
-int UnsortedTableOnVec<TKey, TVal>::find_index(const TKey& key) const noexcept {
-    for (int i = 0; i < _rows.size(); ++i) {
-        if (_rows[i].first == key) {
-            return i;
+int SortedTableOnVec<TKey, TVal>::binary_search(const TKey& key) const noexcept {
+    int left = 0;
+    int right = _rows.size() - 1;
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (_rows[mid].first == key) {
+            return mid;
+        }
+        if (_rows[mid].first < key) {
+            left = mid + 1;
+        }
+        else {
+            right = mid - 1;
         }
     }
     return -1;
 }
 
 template<typename TKey, typename TVal>
-void UnsortedTableOnVec<TKey, TVal>::insert(const TKey& key, const TVal& val) {
-    if (find_index(key) != -1) {
-        throw std::runtime_error("Key already exists");
+int SortedTableOnVec<TKey, TVal>::find_insert_position(const TKey& key) const noexcept {
+    int left = 0;
+    int right = _rows.size() - 1;
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (_rows[mid].first < key) {
+            left = mid + 1;
+        }
+        else {
+            right = mid - 1;
+        }
     }
-    _rows.push_back(std::make_pair(key, val));
+    return left;
 }
 
 template<typename TKey, typename TVal>
-TVal UnsortedTableOnVec<TKey, TVal>::find(const TKey& key) const {
-    int index = find_index(key);
+void SortedTableOnVec<TKey, TVal>::insert(const TKey& key, const TVal& val) {
+    if (binary_search(key) != -1) {
+        throw std::runtime_error("Key already exists");
+    }
+
+    int pos = find_insert_position(key);
+    _rows.push_back(std::make_pair(key, val));
+
+    for (int i = _rows.size() - 1; i > pos; --i) {
+        std::swap(_rows[i], _rows[i - 1]);
+    }
+}
+
+template<typename TKey, typename TVal>
+TVal SortedTableOnVec<TKey, TVal>::find(const TKey& key) const {
+    int index = binary_search(key);
     if (index == -1) {
         throw std::runtime_error("Key not found");
     }
@@ -56,45 +94,53 @@ TVal UnsortedTableOnVec<TKey, TVal>::find(const TKey& key) const {
 }
 
 template<typename TKey, typename TVal>
-void UnsortedTableOnVec<TKey, TVal>::erase(const TKey& key) {
-    int index = find_index(key);
+void SortedTableOnVec<TKey, TVal>::erase(const TKey& key) {
+    int index = binary_search(key);
     if (index == -1) {
         throw std::runtime_error("Key not found");
     }
 
-    if (index < _rows.size() - 1) {
-        std::swap(_rows[index], _rows[_rows.size() - 1]);
+    for (int i = index; i < _rows.size() - 1; ++i) {
+        _rows[i] = _rows[i + 1];
     }
     _rows.pop_back();
 }
 
 template<typename TKey, typename TVal>
-std::ostream& UnsortedTableOnVec<TKey, TVal>::print(std::ostream& out) const noexcept {
-    out << "Unsorted Table Contents:\n";
+std::ostream& SortedTableOnVec<TKey, TVal>::print(std::ostream& out) const noexcept {
+    out << "Sorted Table Contents (size: " << _rows.size() << "):\n";
     for (int i = 0; i < _rows.size(); ++i) {
-        out << "Key: " << _rows[i].first << ", Value: " << _rows[i].second << "\n";
+        out << "  [" << i << "] Key: " << _rows[i].first << ", Value: " << _rows[i].second << "\n";
+    }
+    if (_rows.size() == 0) {
+        out << "  Table is empty\n";
     }
     return out;
 }
 
 template<typename TKey, typename TVal>
-bool UnsortedTableOnVec<TKey, TVal>::is_empty() const noexcept {
+bool SortedTableOnVec<TKey, TVal>::is_empty() const noexcept {
     return _rows.empty();
 }
 
 template<typename TKey, typename TVal>
-bool UnsortedTableOnVec<TKey, TVal>::contains(const TKey& key) const noexcept {
-    return find_index(key) != -1;
+bool SortedTableOnVec<TKey, TVal>::consist(const TKey& key) const noexcept {
+    return binary_search(key) != -1;
 }
 
 template<typename TKey, typename TVal>
-int UnsortedTableOnVec<TKey, TVal>::size() const noexcept {
+int SortedTableOnVec<TKey, TVal>::size(const TKey& key) const noexcept {
+    return binary_search(key) != -1 ? 1 : 0;
+}
+
+template<typename TKey, typename TVal>
+int SortedTableOnVec<TKey, TVal>::size() const noexcept {
     return _rows.size();
 }
 
 template<typename TKey, typename TVal>
-void UnsortedTableOnVec<TKey, TVal>::replace(const TKey& key, const TVal& val) {
-    int index = find_index(key);
+void SortedTableOnVec<TKey, TVal>::replace(const TKey& key, const TVal& val) {
+    int index = binary_search(key);
     if (index == -1) {
         throw std::runtime_error("Key not found");
     }
@@ -102,7 +148,7 @@ void UnsortedTableOnVec<TKey, TVal>::replace(const TKey& key, const TVal& val) {
 }
 
 template<typename TKey, typename TVal>
-Tvector<TKey> UnsortedTableOnVec<TKey, TVal>::get_keys() const {
+Tvector<TKey> SortedTableOnVec<TKey, TVal>::get_keys() const {
     Tvector<TKey> keys;
     for (int i = 0; i < _rows.size(); ++i) {
         keys.push_back(_rows[i].first);
@@ -111,10 +157,26 @@ Tvector<TKey> UnsortedTableOnVec<TKey, TVal>::get_keys() const {
 }
 
 template<typename TKey, typename TVal>
-Tvector<TVal> UnsortedTableOnVec<TKey, TVal>::get_values() const {
+Tvector<TVal> SortedTableOnVec<TKey, TVal>::get_values() const {
     Tvector<TVal> values;
     for (int i = 0; i < _rows.size(); ++i) {
         values.push_back(_rows[i].second);
     }
     return values;
+}
+
+template<typename TKey, typename TVal>
+TKey SortedTableOnVec<TKey, TVal>::get_min_key() const {
+    if (_rows.empty()) {
+        throw std::runtime_error("Table is empty");
+    }
+    return _rows[0].first;
+}
+
+template<typename TKey, typename TVal>
+TKey SortedTableOnVec<TKey, TVal>::get_max_key() const {
+    if (_rows.empty()) {
+        throw std::runtime_error("Table is empty");
+    }
+    return _rows[_rows.size() - 1].first;
 }

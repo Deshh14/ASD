@@ -20,12 +20,9 @@ public:
     void erase(const TKey& key) override;
     std::ostream& print(std::ostream& out) const noexcept override;
     bool is_empty() const noexcept override;
-    bool contains(const TKey& key) const noexcept override;
-    int size() const noexcept override;
-    void replace(const TKey& key, const TVal& val) override;
-
-    Tvector<TKey> get_keys() const;
-    Tvector<TVal> get_values() const;
+    bool consist(const TKey& key) const noexcept override;  
+    int size(const TKey& key) const noexcept override;     
+    void replace(const TKey& key, const TVal& val) override; 
 };
 
 template<typename TKey, typename TVal>
@@ -83,13 +80,13 @@ bool UnsortedTableOnVec<TKey, TVal>::is_empty() const noexcept {
 }
 
 template<typename TKey, typename TVal>
-bool UnsortedTableOnVec<TKey, TVal>::contains(const TKey& key) const noexcept {
+bool UnsortedTableOnVec<TKey, TVal>::consist(const TKey& key) const noexcept {
     return find_index(key) != -1;
 }
 
 template<typename TKey, typename TVal>
-int UnsortedTableOnVec<TKey, TVal>::size() const noexcept {
-    return _rows.size();
+int UnsortedTableOnVec<TKey, TVal>::size(const TKey& key) const noexcept {
+    return find_index(key) != -1 ? 1 : 0;
 }
 
 template<typename TKey, typename TVal>
@@ -99,22 +96,4 @@ void UnsortedTableOnVec<TKey, TVal>::replace(const TKey& key, const TVal& val) {
         throw std::runtime_error("Key not found");
     }
     _rows[index].second = val;
-}
-
-template<typename TKey, typename TVal>
-Tvector<TKey> UnsortedTableOnVec<TKey, TVal>::get_keys() const {
-    Tvector<TKey> keys;
-    for (int i = 0; i < _rows.size(); ++i) {
-        keys.push_back(_rows[i].first);
-    }
-    return keys;
-}
-
-template<typename TKey, typename TVal>
-Tvector<TVal> UnsortedTableOnVec<TKey, TVal>::get_values() const {
-    Tvector<TVal> values;
-    for (int i = 0; i < _rows.size(); ++i) {
-        values.push_back(_rows[i].second);
-    }
-    return values;
 }
