@@ -86,7 +86,7 @@ bool UnsortedTableOnVec<TKey, TVal>::consist(const TKey& key) const noexcept {
 
 template<typename TKey, typename TVal>
 int UnsortedTableOnVec<TKey, TVal>::size(const TKey& key) const noexcept {
-    return find_index(key) != -1 ? 1 : 0;
+    return find_index(key) != -1 ? _rows.size() : 0;
 }
 
 template<typename TKey, typename TVal>

@@ -3,7 +3,6 @@
 #include <sstream>
 #include "UnsortedTableOnVec.h"
 
-// Тест 1: Проверка базовых операций
 TEST(UnsortedTableOnVecTest, BasicOperations) {
     UnsortedTableOnVec<std::string, int> table;
 
@@ -24,12 +23,10 @@ TEST(UnsortedTableOnVecTest, BasicOperations) {
     EXPECT_EQ(table.find("two"), 2);
     EXPECT_EQ(table.find("three"), 3);
 
-    // Проверка size(const TKey& key)
-    EXPECT_EQ(table.size("one"), 1);
+    EXPECT_EQ(table.size("one"), 3);
     EXPECT_EQ(table.size("four"), 0);
 }
 
-// Тест 2: Проверка replace и erase
 TEST(UnsortedTableOnVecTest, ReplaceAndErase) {
     UnsortedTableOnVec<std::string, int> table;
 
@@ -39,38 +36,30 @@ TEST(UnsortedTableOnVecTest, ReplaceAndErase) {
 
     EXPECT_EQ(table.find("b"), 20);
 
-    // Replace
     table.replace("b", 200);
     EXPECT_EQ(table.find("b"), 200);
 
-    // Erase
     table.erase("b");
     EXPECT_FALSE(table.consist("b"));
     EXPECT_TRUE(table.consist("a"));
     EXPECT_TRUE(table.consist("c"));
 
     // Проверка size после удаления
-    EXPECT_EQ(table.size("a"), 1);
+    EXPECT_EQ(table.size("a"), 2);
     EXPECT_EQ(table.size("b"), 0);
 }
 
-// Тест 3: Проверка исключений
 TEST(UnsortedTableOnVecTest, ExceptionHandling) {
     UnsortedTableOnVec<std::string, int> table;
 
-    // Поиск несуществующего
     EXPECT_THROW(table.find("nonexistent"), std::runtime_error);
 
-    // Удаление несуществующего
     EXPECT_THROW(table.erase("nonexistent"), std::runtime_error);
 
-    // Замена несуществующего
     EXPECT_THROW(table.replace("nonexistent", 100), std::runtime_error);
 
-    // Вставка
     table.insert("key", 50);
 
-    // Вставка дубликата
     EXPECT_THROW(table.insert("key", 100), std::runtime_error);
 
     // Проверка, что значение не изменилось
