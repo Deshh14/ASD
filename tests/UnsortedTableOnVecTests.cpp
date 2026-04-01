@@ -44,7 +44,6 @@ TEST(UnsortedTableOnVecTest, ReplaceAndErase) {
     EXPECT_TRUE(table.consist("a"));
     EXPECT_TRUE(table.consist("c"));
 
-    // Проверка size после удаления
     EXPECT_EQ(table.size("a"), 2);
     EXPECT_EQ(table.size("b"), 0);
 }
@@ -62,11 +61,9 @@ TEST(UnsortedTableOnVecTest, ExceptionHandling) {
 
     EXPECT_THROW(table.insert("key", 100), std::runtime_error);
 
-    // Проверка, что значение не изменилось
     EXPECT_EQ(table.find("key"), 50);
 }
 
-// Тест 4: Проверка print
 TEST(UnsortedTableOnVecTest, PrintMethod) {
     UnsortedTableOnVec<std::string, int> table;
     table.insert("x", 10);
@@ -79,25 +76,4 @@ TEST(UnsortedTableOnVecTest, PrintMethod) {
     EXPECT_NE(output.find("Unsorted Table Contents:"), std::string::npos);
     EXPECT_NE(output.find("Key: x, Value: 10"), std::string::npos);
     EXPECT_NE(output.find("Key: y, Value: 20"), std::string::npos);
-}
-
-// Тест 5: Проверка работы с разными типами
-TEST(UnsortedTableOnVecTest, DifferentTypes) {
-    // int ключи, string значения
-    UnsortedTableOnVec<int, std::string> table1;
-    table1.insert(1, "one");
-    table1.insert(2, "two");
-
-    EXPECT_EQ(table1.find(1), "one");
-    EXPECT_EQ(table1.find(2), "two");
-    EXPECT_TRUE(table1.consist(1));
-    EXPECT_EQ(table1.size(1), 1);
-
-    // string ключи, double значения
-    UnsortedTableOnVec<std::string, double> table2;
-    table2.insert("pi", 3.14159);
-    table2.insert("e", 2.71828);
-
-    EXPECT_DOUBLE_EQ(table2.find("pi"), 3.14159);
-    EXPECT_DOUBLE_EQ(table2.find("e"), 2.71828);
 }

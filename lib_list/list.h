@@ -35,14 +35,18 @@ public:
     public:
         Iterator(Node* node);
         T& operator*();
+        const T& operator*() const;
         Iterator& operator++();
         Iterator operator++(int);
         bool operator==(const Iterator& other) const;
         bool operator!=(const Iterator& other) const;
+        Node* getNode() const { return current; }
     };
 
     Iterator begin();
     Iterator end();
+    Iterator begin() const; 
+    Iterator end() const;
 
     bool empty() const;
     size_t size() const;
@@ -60,6 +64,22 @@ public:
     void unique();
     void sort();
 };
+
+
+template<typename T>
+const T& List<T>::Iterator::operator*() const {
+    return current->data;
+}
+
+template<typename T>
+typename List<T>::Iterator List<T>::begin() const {
+    return Iterator(head);
+}
+
+template<typename T>
+typename List<T>::Iterator List<T>::end() const {
+    return Iterator(nullptr);
+}
 
 
 template<typename T>
@@ -257,7 +277,7 @@ typename List<T>::Iterator List<T>::insert(Iterator position, const T& value) {
         return begin();
     }
 
-    Node* current = position.current;
+    Node* current = position.getNode(); 
     Node* new_node = new Node(value);
 
     new_node->prev = current->prev;
@@ -273,7 +293,7 @@ template<typename T>
 typename List<T>::Iterator List<T>::erase(Iterator position) {
     if (position == end()) return end();
 
-    Node* current = position.current;
+    Node* current = position.getNode();  
     Node* next_node = current->next;
 
     if (current == head) {

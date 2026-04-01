@@ -1,52 +1,103 @@
 #pragma once
 #include "ITable.h"
-#include "SkipList.h"
+#include "List.h"
 #include <iostream>
+#include <utility>
 #include <stdexcept>
 
 template<typename TKey, typename TVal>
-class TableOnSkipList : public ITable<TKey, TVal> {
+class UnsortedTableOnList : public ITable<TKey, TVal> {
 private:
-    SkipList<TKey, TVal> _skipList;
+    List<std::pair<TKey, TVal>> _rows;
+
+    typename List<std::pair<TKey, TVal>>::Iterator find_iterator(const TKey& key) const noexcept;
 
 public:
-    TableOnSkipList(size_t max_levels = 10) : _skipList(max_levels) {}
-    ~TableOnSkipList() = default;
+    UnsortedTableOnList() = default;
+    ~UnsortedTableOnList() = default;
 
-    void insert(const TKey& key, const TVal& val) override {
-        _skipList.insert(key, val);
-    }
+    UnsortedTableOnList(const UnsortedTableOnList&) = delete;
+    UnsortedTableOnList& operator=(const UnsortedTableOnList&) = delete;
 
-    TVal find(const TKey& key) const override {
-        return _skipList.find(key);
-    }
-
-    void erase(const TKey& key) override {
-        _skipList.erase(key);
-    }
-
-    std::ostream& print(std::ostream& out) const noexcept override {
-        _skipList.print(out);
-        return out;
-    }
-
-    bool is_empty() const noexcept override {
-        return _skipList.is_empty();
-    }
-
-    bool contains(const TKey& key) const noexcept override {
-        return _skipList.contains(key);
-    }
-
-    int size() const noexcept override {
-        return _skipList.size();
-    }
-
-    void replace(const TKey& key, const TVal& val) override {
-        if (!contains(key)) {
-            throw std::runtime_error("Key not found");
-        }
-        _skipList.erase(key);
-        _skipList.insert(key, val);
-    }
+    void insert(const TKey& key, const TVal& val) override;
+    TVal find(const TKey& key) const override;
+    void erase(const TKey& key) override;
+    std::ostream& print(std::ostream& out) const noexcept override;
+    bool is_empty() const noexcept override;
+    bool consist(const TKey& key) const noexcept override;
+    int size(const TKey& key) const noexcept override;
+    void replace(const TKey& key, const TVal& val) override;
 };
+
+template<typename TKey, typename TVal>
+typename List<std::pair<TKey, TVal>>::Iterator
+UnsortedTableOnList<TKey, TVal>::find_iterator(const TKey& key) const noexcept {
+    for (auto it = _rows.begin(); it != _rows.end(); ++it) {
+        if ((*it).first == key) {  
+            return it;
+        }
+    }
+    return _rows.end();
+}
+
+template<typename TKey, typename TVal>
+void UnsortedTableOnList<TKey, TVal>::insert(const TKey& key, const TVal& val) {
+    if (find_iterator(key) != _rows.end()) {
+        throw std::runtime_error("Key already exists");
+    }
+    _rows.push_back(std::make_pair(key, val));
+}
+
+template<typename TKey, typename TVal>
+TVal UnsortedTableOnList<TKey, TVal>::find(const TKey& key) const {
+    auto it = find_iterator(key);
+    if (it == _rows.end()) {
+        throw std::runtime_error("Key not found");
+    }
+    return (*it).second;
+}
+
+template<typename TKey, typename TVal>
+void UnsortedTableOnList<TKey, TVal>::erase(const TKey& key) {
+    auto it = find_iterator(key);
+    if (it == _rows.end()) {
+        throw std::runtime_error("Key not found");
+    }
+    _rows.erase(it);
+}
+
+template<typename TKey, typename TVal>
+std::ostream& UnsortedTableOnList<TKey, TVal>::print(std::ostream& out) const noexcept {
+    out << "Unsorted List Table Contents (size: " << _rows.size() << "):\n";
+    int index = 0;
+    for (auto it = _rows.begin(); it != _rows.end(); ++it) {
+        out << "  [" << index++ << "] Key: " << (*it).first  
+            << ", Value: " << (*it).second << "\n"; 
+    }
+    return out;
+}
+
+template<typename TKey, typename TVal>
+bool UnsortedTableOnList<TKey, TVal>::is_empty() const noexcept {
+    return _rows.empty();
+}
+
+template<typename TKey, typename TVal>
+bool UnsortedTableOnList<TKey, TVal>::consist(const TKey& key) const noexcept {
+    return find_iterator(key) != _rows.end();
+}
+
+template<typename TKey, typename TVal>
+int UnsortedTableOnList<TKey, TVal>::size(const TKey& key) const noexcept {
+    auto it = find_iterator(key);
+    return (it != _rows.end()) ? 1 : 0;
+}
+
+template<typename TKey, typename TVal>
+void UnsortedTableOnList<TKey, TVal>::replace(const TKey& key, const TVal& val) {
+    auto it = find_iterator(key);
+    if (it == _rows.end()) {
+        throw std::runtime_error("Key not found");
+    }
+    (*it).second = val;  
+}
