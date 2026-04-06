@@ -35,21 +35,13 @@ public:
 
 template<typename TKey, typename TVal>
 int SortedTableOnVec<TKey, TVal>::binary_search(const TKey& key) const noexcept {
-    int left = 0;
-    int right = _rows.size() - 1;
+    
+    int pos = find_insert_position(key);
 
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        if (_rows[mid].first == key) {
-            return mid;
-        }
-        if (_rows[mid].first < key) {
-            left = mid + 1;
-        }
-        else {
-            right = mid - 1;
-        }
+    if(pos < _rows.size() && _rows[pos].first == key) {
+        return pos;
     }
+
     return -1;
 }
 
@@ -60,6 +52,9 @@ int SortedTableOnVec<TKey, TVal>::find_insert_position(const TKey& key) const no
 
     while (left <= right) {
         int mid = left + (right - left) / 2;
+        if (_rows[mid].first == key) {
+            return mid;
+        }
         if (_rows[mid].first < key) {
             left = mid + 1;
         }

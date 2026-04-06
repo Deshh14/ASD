@@ -59,10 +59,8 @@ void UnsortedTableOnVec<TKey, TVal>::erase(const TKey& key) {
         throw std::runtime_error("Key not found");
     }
 
-    if (index < _rows.size() - 1) {
-        std::swap(_rows[index], _rows[_rows.size() - 1]);
-    }
-    _rows.pop_back();
+    _rows.erase(index);
+
 }
 
 template<typename TKey, typename TVal>
