@@ -24,6 +24,7 @@ add_subdirectory(UnsortedTableOnVec)
 add_subdirectory(SortedTableOnVec)
 add_subdirectory(TableOnList)
 add_subdirectory(UnsortedTableOnTree)
+add_subdirectory(SortedTableOnTree)
 add_subdirectory(ITable)
 add_subdirectory(Algorithms)
 
