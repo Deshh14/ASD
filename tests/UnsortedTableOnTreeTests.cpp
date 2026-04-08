@@ -2,7 +2,6 @@
 #include "UnsortedTableOnTree.h"
 #include <string>
 
-// Тест 1: Вставка и размер
 TEST(UnsortedTableOnTreeTest, InsertAndSize) {
     UnsortedTableOnTree<int, std::string> table;
 
@@ -26,11 +25,9 @@ TEST(UnsortedTableOnTreeTest, InsertAndSize) {
     EXPECT_EQ(1, table.size(2));
     EXPECT_EQ(1, table.size(4));
 
-    // Проверка дубликата
     EXPECT_THROW(table.insert(5, "FIVE"), std::runtime_error);
 }
 
-// Тест 2: Поиск
 TEST(UnsortedTableOnTreeTest, Find) {
     UnsortedTableOnTree<int, std::string> table;
 
@@ -48,7 +45,6 @@ TEST(UnsortedTableOnTreeTest, Find) {
     EXPECT_FALSE(table.consist(10));
 }
 
-// Тест 3: Удаление
 TEST(UnsortedTableOnTreeTest, Erase) {
     UnsortedTableOnTree<int, std::string> table;
 
@@ -59,19 +55,15 @@ TEST(UnsortedTableOnTreeTest, Erase) {
     table.insert(2, "two");
     table.insert(4, "four");
 
-    // Удаление листа
     EXPECT_NO_THROW(table.erase(7));
     EXPECT_FALSE(table.consist(7));
 
-    // Удаление узла с детьми
     EXPECT_NO_THROW(table.erase(5));
     EXPECT_FALSE(table.consist(5));
 
-    // Удаление несуществующего
     EXPECT_THROW(table.erase(100), std::runtime_error);
 }
 
-// Тест 4: Замена
 TEST(UnsortedTableOnTreeTest, Replace) {
     UnsortedTableOnTree<int, std::string> table;
 
@@ -85,7 +77,6 @@ TEST(UnsortedTableOnTreeTest, Replace) {
     EXPECT_THROW(table.replace(10, "ten"), std::runtime_error);
 }
 
-// Тест 5: Комплексный тест
 TEST(UnsortedTableOnTreeTest, ComplexScenario) {
     UnsortedTableOnTree<std::string, int> table;
 
@@ -123,7 +114,6 @@ TEST(UnsortedTableOnTreeTest, ComplexScenario) {
     EXPECT_TRUE(table.is_empty());
 }
 
-// Тест 6: Проверка всех обходов дерева
 TEST(UnsortedTableOnTreeTest, TreeTraversals) {
     UnsortedTableOnTree<int, std::string> table;
 
@@ -134,7 +124,6 @@ TEST(UnsortedTableOnTreeTest, TreeTraversals) {
     table.insert(2, "two");
     table.insert(4, "four");
 
-    // Просто проверяем, что вывод не вызывает ошибок
     std::ostringstream oss;
     EXPECT_NO_THROW(table.print(oss));
     EXPECT_FALSE(oss.str().empty());

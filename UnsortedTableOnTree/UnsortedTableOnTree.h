@@ -44,7 +44,7 @@ public:
     UnsortedTableOnTree& operator=(const UnsortedTableOnTree&) = delete;
 
     void insert(const TKey& key, const TVal& val) override {
-        if (this->contains(key)) {  // Исправлено: добавляем this->
+        if (this->contains(key)) {
             throw std::runtime_error("Key already exists");
         }
         tree.insert(Pair(key, val));
@@ -99,20 +99,18 @@ public:
     }
 
     int size(const TKey& key) const noexcept override {
-        return this->contains(key) ? 1 : 0;  // Исправлено: добавляем this->
+        return this->contains(key) ? 1 : 0;  
     }
 
-    // Добавленный метод size() без параметров
     int size() const noexcept {
         return static_cast<int>(tree.size());
     }
 
     void replace(const TKey& key, const TVal& val) override {
-        this->erase(key);  // Исправлено: добавляем this->
-        this->insert(key, val);  // Исправлено: добавляем this->
+        this->erase(key); 
+        this->insert(key, val);  
     }
-
-    // Метод contains
+    \
     bool contains(const TKey& key) const {
         Pair dummy(key, TVal());
         return tree.contains(dummy);

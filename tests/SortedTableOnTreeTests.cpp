@@ -2,7 +2,6 @@
 #include "OrderedTableOnBST.h"
 #include <string>
 
-// Тест 1: Вставка и поиск
 TEST(OrderedTableOnBSTTest, InsertAndFind) {
     OrderedTableOnBST<int, std::string> table;
 
@@ -23,7 +22,6 @@ TEST(OrderedTableOnBSTTest, InsertAndFind) {
     EXPECT_THROW(table.find(10), std::runtime_error);
 }
 
-// Тест 2: Проверка дубликатов
 TEST(OrderedTableOnBSTTest, DuplicateInsert) {
     OrderedTableOnBST<int, std::string> table;
 
@@ -31,7 +29,6 @@ TEST(OrderedTableOnBSTTest, DuplicateInsert) {
     EXPECT_THROW(table.insert(5, "FIVE"), std::runtime_error);
 }
 
-// Тест 3: Удаление листа
 TEST(OrderedTableOnBSTTest, EraseLeaf) {
     OrderedTableOnBST<int, std::string> table;
 
@@ -50,11 +47,9 @@ TEST(OrderedTableOnBSTTest, EraseLeaf) {
     EXPECT_TRUE(table.consist(1));
 }
 
-// Тест 4: Удаление узла с одним ребенком
 TEST(OrderedTableOnBSTTest, EraseNodeWithOneChild) {
     OrderedTableOnBST<int, std::string> table;
 
-    // Удаление узла с левым ребенком
     table.insert(5, "five");
     table.insert(3, "three");
     table.insert(1, "one");
@@ -65,7 +60,6 @@ TEST(OrderedTableOnBSTTest, EraseNodeWithOneChild) {
     EXPECT_TRUE(table.consist(5));
     EXPECT_TRUE(table.consist(1));
 
-    // Удаление узла с правым ребенком
     OrderedTableOnBST<int, std::string> table2;
     table2.insert(11, "eleven");
     table2.insert(5, "five");
@@ -79,7 +73,6 @@ TEST(OrderedTableOnBSTTest, EraseNodeWithOneChild) {
     EXPECT_FALSE(table2.consist(5));
 }
 
-// Тест 5: Удаление узла с двумя детьми
 TEST(OrderedTableOnBSTTest, EraseNodeWithTwoChildren) {
     OrderedTableOnBST<int, std::string> table;
 
@@ -102,7 +95,6 @@ TEST(OrderedTableOnBSTTest, EraseNodeWithTwoChildren) {
     EXPECT_TRUE(table.consist(8));
 }
 
-// Тест 6: Удаление корня
 TEST(OrderedTableOnBSTTest, EraseRoot) {
     OrderedTableOnBST<int, std::string> table;
 
@@ -122,7 +114,6 @@ TEST(OrderedTableOnBSTTest, EraseRoot) {
     EXPECT_EQ(2, table2.size());
 }
 
-// Тест 7: Замена значений
 TEST(OrderedTableOnBSTTest, Replace) {
     OrderedTableOnBST<int, std::string> table;
 
@@ -136,7 +127,6 @@ TEST(OrderedTableOnBSTTest, Replace) {
     EXPECT_THROW(table.replace(10, "ten"), std::runtime_error);
 }
 
-// Тест 8: Упорядоченность вывода
 TEST(OrderedTableOnBSTTest, OrderedOutput) {
     OrderedTableOnBST<int, std::string> table;
 
@@ -151,7 +141,6 @@ TEST(OrderedTableOnBSTTest, OrderedOutput) {
     table.print(oss);
     std::string output = oss.str();
 
-    // Проверяем, что вывод содержит элементы в порядке возрастания
     size_t pos1 = output.find("1:one");
     size_t pos2 = output.find("2:two");
     size_t pos3 = output.find("3:three");
@@ -166,7 +155,6 @@ TEST(OrderedTableOnBSTTest, OrderedOutput) {
     EXPECT_LT(pos5, pos6);
 }
 
-// Тест 9: Комплексный сценарий
 TEST(OrderedTableOnBSTTest, ComplexScenario) {
     OrderedTableOnBST<std::string, int> table;
 

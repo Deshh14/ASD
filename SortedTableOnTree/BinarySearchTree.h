@@ -42,7 +42,6 @@ private:
         out << node->data << " ";
     }
 
-    // Поиск узла по значению
     Node* find_node(const T& value) const {
         Node* current = root;
         while (current) {
@@ -59,7 +58,6 @@ private:
         return nullptr;
     }
 
-    // Поиск максимального элемента в поддереве
     Node* find_max(Node* node) const {
         while (node && node->right) {
             node = node->right;
@@ -67,7 +65,6 @@ private:
         return node;
     }
 
-    // Поиск минимального элемента в поддереве
     Node* find_min(Node* node) const {
         while (node && node->left) {
             node = node->left;
@@ -75,7 +72,6 @@ private:
         return node;
     }
 
-    // Красивый вывод дерева
     void print_tree(Node* node, int space, int indent, std::ostream& out) const {
         if (!node) return;
 
@@ -89,7 +85,6 @@ private:
         print_tree(node->left, space, indent, out);
     }
 
-    // Очистка дерева
     void clear_recursive(Node* node) {
         if (!node) return;
         clear_recursive(node->left);
@@ -97,7 +92,6 @@ private:
         delete node;
     }
 
-    // Вспомогательный метод для удаления узла
     void remove_node(Node* node) {
         if (!node) return;
 
@@ -116,7 +110,6 @@ private:
             }
             delete node;
         }
-        // Случай 2: только правый ребенок
         else if (!node->left && node->right) {
             if (node->parent) {
                 if (node->parent->left == node) {
@@ -133,7 +126,7 @@ private:
             }
             delete node;
         }
-        // Случай 3: только левый ребенок
+
         else if (node->left && !node->right) {
             if (node->parent) {
                 if (node->parent->left == node) {
@@ -150,15 +143,11 @@ private:
             }
             delete node;
         }
-        // Случай 4: два ребенка
         else {
-            // Находим максимальный элемент в левом поддереве
             Node* max_left = find_max(node->left);
-            // Копируем данные
             node->data = max_left->data;
-            // Удаляем узел-источник
             remove_node(max_left);
-            return; // Уже удалили, выходим
+            return;
         }
         node_count--;
     }
@@ -170,7 +159,6 @@ public:
         clear_recursive(root);
     }
 
-    // Вставка элемента
     void insert(const T& value) {
         Node* new_node = new Node(value);
 
@@ -207,12 +195,10 @@ public:
         node_count++;
     }
 
-    // Поиск элемента
     bool contains(const T& value) const {
         return find_node(value) != nullptr;
     }
 
-    // Получение значения
     T find(const T& value) const {
         Node* node = find_node(value);
         if (!node) {
@@ -221,7 +207,6 @@ public:
         return node->data;
     }
 
-    // Удаление элемента
     bool erase(const T& value) {
         Node* to_delete = find_node(value);
         if (!to_delete) return false;
@@ -230,22 +215,22 @@ public:
         return true;
     }
 
-    // Обход в симметричном порядке (для упорядоченного вывода)
+    //в симметричном порядке
     void print_inorder(std::ostream& out) const {
         inorder_recursive(root, out);
     }
 
-    // Обход в прямом порядке
+    //в прямом порядке
     void print_preorder(std::ostream& out) const {
         preorder_recursive(root, out);
     }
 
-    // Обход в обратном порядке
+    //в обратном порядке
     void print_postorder(std::ostream& out) const {
         postorder_recursive(root, out);
     }
 
-    // Обход в ширину
+    //в ширину
     void print_levelorder(std::ostream& out) const {
         if (!root) return;
 

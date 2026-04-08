@@ -20,7 +20,7 @@ private:
     Node* root;
     int node_count;
 
-    // Вспомогательные методы для обходов
+    
     void preorder_recursive(Node* node, std::ostream& out) const {
         if (!node) return;
         out << node->data << " ";
@@ -42,7 +42,6 @@ private:
         out << node->data << " ";
     }
 
-    // Поиск последнего узла (для удаления)
     Node* find_last_node() {
         if (!root) return nullptr;
 
@@ -59,7 +58,6 @@ private:
         return last;
     }
 
-    // Поиск узла по значению
     Node* find_node(const T& value) {
         if (!root) return nullptr;
 
@@ -93,7 +91,6 @@ private:
         node_count--;
     }
 
-    // Красивый вывод дерева
     void print_tree(Node* node, int space, int indent, std::ostream& out) const {
         if (!node) return;
 
@@ -178,22 +175,22 @@ public:
         return true;
     }
 
-    // Обход в прямом порядке (preorder) - корень, левое, правое
+    //корень, левое, правое
     void print_preorder(std::ostream& out) const {
         preorder_recursive(root, out);
     }
 
-    // Обход в симметричном порядке (inorder) - левое, корень, правое
+    //левое, корень, правое
     void print_inorder(std::ostream& out) const {
         inorder_recursive(root, out);
     }
 
-    // Обход в обратном порядке (postorder) - левое, правое, корень
+    //левое, правое, корень
     void print_postorder(std::ostream& out) const {
         postorder_recursive(root, out);
     }
 
-    // Обход в ширину (level order)
+    //в ширину
     void print_levelorder(std::ostream& out) const {
         if (!root) return;
 
@@ -209,7 +206,6 @@ public:
         }
     }
 
-    // Красивый вывод дерева
     void print_tree(std::ostream& out) const {
         if (!root) {
             out << "(empty tree)\n";
@@ -221,7 +217,6 @@ public:
     int size() const { return node_count; }
     bool empty() const { return node_count == 0; }
 
-    // Очистка дерева
     void clear() {
         if (!root) return;
 
@@ -240,7 +235,6 @@ public:
         node_count = 0;
     }
 
-    // Получение значения (для таблицы)
     T find(const T& value) const {
         if (!root) throw std::runtime_error("Not found");
 
