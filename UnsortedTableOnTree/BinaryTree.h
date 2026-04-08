@@ -76,11 +76,9 @@ private:
         return nullptr;
     }
 
-    // Удаление узла и освобождение памяти
     void delete_node(Node* node) {
         if (!node) return;
 
-        // Находим родителя
         Node* parent = node->parent;
 
         if (parent) {
@@ -113,7 +111,6 @@ public:
     BinaryTree() : root(nullptr), node_count(0) {}
     ~BinaryTree() { clear(); }
 
-    // Вставка элемента (на первый свободный уровень)
     void insert(const T& value) {
         Node* new_node = new Node(value);
 
@@ -148,7 +145,6 @@ public:
         }
     }
 
-    // Поиск элемента
     bool contains(const T& value) const {
         if (!root) return false;
 
@@ -165,7 +161,6 @@ public:
         return false;
     }
 
-    // Удаление элемента (заменой на последний)
     bool erase(const T& value) {
         Node* to_delete = find_node(value);
         if (!to_delete) return false;
@@ -177,7 +172,6 @@ public:
             return true;
         }
 
-        // Заменяем данные удаляемого узла данными последнего
         to_delete->data = last_node->data;
         delete_node(last_node);
 
