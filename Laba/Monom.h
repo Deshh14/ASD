@@ -248,7 +248,6 @@ inline std::string Monom::toString() const {
     std::stringstream ss;
 
     if (fabs(coef - 1.0) > 1e-9 || (degree[0] == 0 && degree[1] == 0 && degree[2] == 0)) {
-        ss << coef;
         if (coef == static_cast<int>(coef)) {
             ss << static_cast<int>(coef);
         }

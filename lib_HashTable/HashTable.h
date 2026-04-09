@@ -28,10 +28,10 @@ private:
 template<typename Tkey, typename Tval>
 size_t HashTableC<Tkey, Tval>::h(const Tkey& key) const noexcept {
     size_t hash = 0;
-    for (char c : key) {
-        hash = hash * 31 + c;
+    for (auto sym : key) {
+        hash += sym;
     }
-    return hash % _rows.get_size();
+    return hash % _size;
 }
 
 template<typename Tkey, typename Tval>

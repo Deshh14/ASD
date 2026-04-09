@@ -20,21 +20,21 @@ private:
     Node* root;
     int node_count;
 
-    
+    //симметричный лево корень право
     void preorder_recursive(Node* node, std::ostream& out) const {
         if (!node) return;
         out << node->data << " ";
         preorder_recursive(node->left, out);
         preorder_recursive(node->right, out);
     }
-
+    //прямой корень лево право
     void inorder_recursive(Node* node, std::ostream& out) const {
         if (!node) return;
         inorder_recursive(node->left, out);
         out << node->data << " ";
         inorder_recursive(node->right, out);
     }
-
+    //обратный лево право корень
     void postorder_recursive(Node* node, std::ostream& out) const {
         if (!node) return;
         postorder_recursive(node->left, out);
