@@ -58,7 +58,6 @@ TEST(MonomTest, Arithmetic) {
 TEST(MonomTest, Evaluate) {
     Monom m(2.0, 2, 1, 3);
     double val = m.evaluate(2, 3, 4);
-    // 2 * 2^2 * 3^1 * 4^3 = 2 * 4 * 3 * 64 = 1536
     EXPECT_DOUBLE_EQ(1536.0, val);
 }
 
@@ -90,7 +89,7 @@ TEST(PolynomTest, Simplify) {
     p.addMonom(Monom(5.0, 2, 0, 0));
     p.addMonom(Monom(2.0, 1, 1, 0));
 
-    EXPECT_EQ(2, p.getSize()); // 8x^2 + 2xy
+    EXPECT_EQ(2, p.getSize());
 }
 
 TEST(PolynomTest, Addition) {
@@ -98,7 +97,7 @@ TEST(PolynomTest, Addition) {
     Polynom p2("5x^2 + 3yz");
     Polynom result = p1 + p2;
 
-    EXPECT_EQ(3, result.getSize()); // 8x^2 + 2xy + 3yz
+    EXPECT_EQ(3, result.getSize()); 
 }
 
 TEST(PolynomTest, Subtraction) {
@@ -106,7 +105,7 @@ TEST(PolynomTest, Subtraction) {
     Polynom p2("x^2 + 2x");
     Polynom result = p1 - p2;
 
-    EXPECT_EQ(2, result.getSize()); // 2x^2 + 3x
+    EXPECT_EQ(2, result.getSize()); 
 }
 
 TEST(PolynomTest, Multiplication) {
@@ -114,31 +113,26 @@ TEST(PolynomTest, Multiplication) {
     Polynom p2("x - y");
     Polynom result = p1 * p2;
 
-    // (x+y)*(x-y) = x^2 - y^2
     EXPECT_EQ(2, result.getSize());
 }
 
 TEST(PolynomTest, Evaluate) {
     Polynom p("3x^2 + 2x + 1");
     double val = p.evaluate(2, 0, 0);
-    // 3*4 + 2*2 + 1 = 12 + 4 + 1 = 17
     EXPECT_DOUBLE_EQ(17.0, val);
 }
 
 TEST(PolynomTest, EvaluateWithThreeVariables) {
     Polynom p("2x^2y + 3yz");
     double val = p.evaluate(2, 3, 4);
-    // 2*4*3 + 3*3*4 = 24 + 36 = 60
     EXPECT_DOUBLE_EQ(60.0, val);
 }
 
 TEST(PolynomTest, CompoundOperations) {
     Polynom p("x^2 + x");
     p += Polynom("2x^2 + 3");
-    // 3x^2 + x + 3
     EXPECT_EQ(3, p.getSize());
 
     p *= 2;
-    // 6x^2 + 2x + 6
     EXPECT_DOUBLE_EQ(6.0, p[0].getCoef());
 }

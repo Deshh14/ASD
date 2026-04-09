@@ -20,7 +20,6 @@ private:
     Node* root;
     int node_count;
 
-    // Вспомогательные методы для обходов
     void inorder_recursive(Node* node, std::ostream& out) const {
         if (!node) return;
         inorder_recursive(node->left, out);
@@ -95,7 +94,6 @@ private:
     void remove_node(Node* node) {
         if (!node) return;
 
-        // Случай 1: лист
         if (!node->left && !node->right) {
             if (node->parent) {
                 if (node->parent->left == node) {

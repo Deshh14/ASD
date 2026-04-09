@@ -8,39 +8,32 @@
 
 class Monom {
 private:
-    double coef;      // Коэффициент
-    int degree[3];    // Степени для x, y, z (индексы: 0-x, 1-y, 2-z)
+    double coef;     
+    int degree[3];    
 
 public:
-    // Конструкторы
     Monom();
     Monom(double c, int x_deg = 0, int y_deg = 0, int z_deg = 0);
     Monom(const Monom& other);
     Monom(const std::string& str);
     ~Monom();
 
-    // Операторы сравнения (проверка подобия - одинаковые степени)
     bool operator==(const Monom& other) const;
     bool operator!=(const Monom& other) const;
 
-    // Операторы сравнения для упорядочивания (лексикографический порядок)
     bool operator<(const Monom& other) const;
     bool operator>(const Monom& other) const;
 
-    // Арифметические операторы с мономами
-    Monom operator+(const Monom& other) const;  // только для подобных
-    Monom operator-(const Monom& other) const;  // только для подобных
+    Monom operator+(const Monom& other) const; 
+    Monom operator-(const Monom& other) const; 
     Monom operator*(const Monom& other) const;
-    Monom operator/(const Monom& other) const;  // деление на моном
+    Monom operator/(const Monom& other) const;
 
-    // Арифметические операторы с константами
     Monom operator*(double c) const;
     Monom operator/(double c) const;
 
-    // Унарный минус
     Monom operator-() const;
 
-    // Операторы с присваиванием
     Monom& operator=(const Monom& other);
     Monom& operator+=(const Monom& other);
     Monom& operator-=(const Monom& other);
@@ -49,29 +42,23 @@ public:
     Monom& operator*=(double c);
     Monom& operator/=(double c);
 
-    // Вычисление значения в точке
     double evaluate(double x, double y, double z) const;
 
-    // Геттеры
     double getCoef() const { return coef; }
     int getDegreeX() const { return degree[0]; }
     int getDegreeY() const { return degree[1]; }
     int getDegreeZ() const { return degree[2]; }
 
-    // Сеттеры
     void setCoef(double c) { coef = c; }
 
-    // Дружественные операторы ввода/вывода
     friend std::ostream& operator<<(std::ostream& out, const Monom& m);
     friend std::istream& operator>>(std::istream& in, Monom& m);
 
-    // Вспомогательные методы
     bool isSimilar(const Monom& other) const;
     bool isZero() const;
     std::string toString() const;
 };
 
-// Конструкторы
 inline Monom::Monom() : coef(0.0) {
     degree[0] = degree[1] = degree[2] = 0;
 }
@@ -90,7 +77,7 @@ inline Monom::Monom(const Monom& other) : coef(other.coef) {
 
 inline Monom::~Monom() {}
 
-// Операторы сравнения
+
 inline bool Monom::operator==(const Monom& other) const {
     return degree[0] == other.degree[0] &&
         degree[1] == other.degree[1] &&
@@ -101,15 +88,11 @@ inline bool Monom::operator!=(const Monom& other) const {
     return !(*this == other);
 }
 
-// Лексикографическое сравнение для упорядочивания
 inline bool Monom::operator<(const Monom& other) const {
-    // Сначала по степени x (большая степень считается "меньше" для порядка)
     if (degree[0] != other.degree[0])
         return degree[0] > other.degree[0];
-    // Затем по степени y
     if (degree[1] != other.degree[1])
         return degree[1] > other.degree[1];
-    // Затем по степени z
     return degree[2] > other.degree[2];
 }
 
@@ -117,7 +100,6 @@ inline bool Monom::operator>(const Monom& other) const {
     return other < *this;
 }
 
-// Арифметические операции
 inline Monom Monom::operator+(const Monom& other) const {
     if (!isSimilar(other)) {
         throw std::runtime_error("Cannot add monoms with different degrees");
@@ -155,7 +137,6 @@ inline Monom Monom::operator/(const Monom& other) const {
     result.degree[1] = degree[1] - other.degree[1];
     result.degree[2] = degree[2] - other.degree[2];
 
-    // Проверка на отрицательные степени
     if (result.degree[0] < 0 || result.degree[1] < 0 || result.degree[2] < 0) {
         throw std::runtime_error("Division results in negative degree");
     }
@@ -183,7 +164,6 @@ inline Monom Monom::operator-() const {
     return result;
 }
 
-// Операторы с присваиванием
 inline Monom& Monom::operator=(const Monom& other) {
     if (this != &other) {
         coef = other.coef;
@@ -246,7 +226,6 @@ inline Monom& Monom::operator/=(double c) {
     return *this;
 }
 
-// Вычисление значения
 inline double Monom::evaluate(double x, double y, double z) const {
     double result = coef;
     result *= pow(x, degree[0]);
@@ -255,7 +234,6 @@ inline double Monom::evaluate(double x, double y, double z) const {
     return result;
 }
 
-// Проверка подобия
 inline bool Monom::isSimilar(const Monom& other) const {
     return *this == other;
 }
@@ -269,7 +247,6 @@ inline std::string Monom::toString() const {
 
     std::stringstream ss;
 
-    // Коэффициент
     if (fabs(coef - 1.0) > 1e-9 || (degree[0] == 0 && degree[1] == 0 && degree[2] == 0)) {
         ss << coef;
         if (coef == static_cast<int>(coef)) {
@@ -280,7 +257,6 @@ inline std::string Monom::toString() const {
         }
     }
 
-    // Переменные
     if (degree[0] > 0) ss << "x^" << degree[0];
     if (degree[1] > 0) ss << "y^" << degree[1];
     if (degree[2] > 0) ss << "z^" << degree[2];
@@ -288,14 +264,12 @@ inline std::string Monom::toString() const {
     return ss.str();
 }
 
-// Операторы ввода/вывода
 inline std::ostream& operator<<(std::ostream& out, const Monom& m) {
     if (m.isZero()) {
         out << "0";
         return out;
     }
 
-    // Коэффициент
     if (fabs(m.coef - 1.0) > 1e-9 || (m.degree[0] == 0 && m.degree[1] == 0 && m.degree[2] == 0)) {
         out << m.coef;
     }
@@ -303,7 +277,6 @@ inline std::ostream& operator<<(std::ostream& out, const Monom& m) {
         out << "-";
     }
 
-    // Переменные
     if (m.degree[0] > 0) out << "x^" << m.degree[0];
     if (m.degree[1] > 0) out << "y^" << m.degree[1];
     if (m.degree[2] > 0) out << "z^" << m.degree[2];
@@ -318,7 +291,6 @@ inline std::istream& operator>>(std::istream& in, Monom& m) {
     return in;
 }
 
-// Конструктор из строки
 inline Monom::Monom(const std::string& str) : coef(1.0) {
     degree[0] = degree[1] = degree[2] = 0;
 
@@ -330,7 +302,6 @@ inline Monom::Monom(const std::string& str) : coef(1.0) {
     size_t pos = 0;
     bool neg = false;
 
-    // Парсим коэффициент
     if (str[0] == '-') {
         neg = true;
         pos++;
@@ -347,7 +318,6 @@ inline Monom::Monom(const std::string& str) : coef(1.0) {
     }
     if (neg) coef = -coef;
 
-    // Парсим переменные
     while (pos < str.length()) {
         char var = str[pos];
         pos++;
