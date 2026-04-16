@@ -1,8 +1,18 @@
 #include <iostream>
 #include <string>
-#include "list.h"
+#include <vector>      
+#include <stdexcept>   
+#include "list.h"      
 #include "Tvector.h"
 #include "ITable.h"
+
+enum class MergeStrategy {
+    KEEP_FIRST,      
+    KEEP_SECOND,     
+    THROW_ON_CONFLICT, 
+    SUM_VALUES      
+};
+
 
 template<typename Tkey, typename Tval>
 class HashTableC : public ITable<Tkey, Tval> {
@@ -20,7 +30,19 @@ public:
     bool consist(const Tkey& key) const noexcept override;
     int size(const Tkey& key) const noexcept override;
     void replace(const Tkey& key, const Tval& val) override;
+    Tvector<std::pair<Tkey, Tval>> get_all_pairs() const {
+        std::vector<std::pair<Tkey, Tval>> all_pairs;
+        for (size_t i = 0; i < _rows.get_size(); ++i) {
+            for (const auto& pair : _rows[i]) {
+                all_pairs.push_back(pair);
+            }
+        }
+        return all_pairs;
+    }
 
+    size_t count() const noexcept {
+        return _size;
+    }
 private:
     size_t h(const Tkey& key) const noexcept;
 };
@@ -28,10 +50,10 @@ private:
 template<typename Tkey, typename Tval>
 size_t HashTableC<Tkey, Tval>::h(const Tkey& key) const noexcept {
     size_t hash = 0;
-    for (auto sym : key) {
-        hash += sym;
+    for (char c : key) {
+        hash = hash * 31 + c;
     }
-    return hash % _size;
+    return hash % _rows.get_size();
 }
 
 template<typename Tkey, typename Tval>
@@ -120,4 +142,45 @@ void HashTableC<Tkey, Tval>::replace(const Tkey& key, const Tval& val) {
     }
 
     throw std::runtime_error("Key not found");
+}
+
+template<typename Tkey, typename Tval>
+HashTableC<Tkey, Tval> mergeTables(
+    const HashTableC<Tkey, Tval>& table1,
+    const HashTableC<Tkey, Tval>& table2,
+    MergeStrategy strategy = MergeStrategy::KEEP_FIRST) {
+
+    HashTableC<Tkey, Tval> result;
+
+    auto pairs1 = table1.get_all_pairs();
+    for (const auto& pair : pairs1) {
+        result.insert(pair.first, pair.second);
+    }
+
+    auto pairs2 = table2.get_all_pairs();
+    for (const auto& pair : pairs2) {
+        if (result.consist(pair.first)) {
+            switch (strategy) {
+            case MergeStrategy::KEEP_FIRST:
+                break;
+
+            case MergeStrategy::KEEP_SECOND:
+                result.replace(pair.first, pair.second);
+                break;
+
+            case MergeStrategy::THROW_ON_CONFLICT:
+                throw std::runtime_error("Key conflict: " + pair.first);
+
+            case MergeStrategy::SUM_VALUES:
+                Tval old_val = result.find(pair.first);
+                result.replace(pair.first, old_val + pair.second);
+                break;
+            }
+        }
+        else {
+            result.insert(pair.first, pair.second);
+        }
+    }
+
+    return result;
 }
