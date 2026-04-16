@@ -34,6 +34,11 @@ public:
     inline int size() const noexcept;
     inline int capacity() const noexcept;
 
+    T* begin() { return _data; }
+    T* end() { return _data + _size; }
+    const T* begin() const { return _data; }
+    const T* end() const { return _data + _size; }
+
     bool empty() const;
     void resize(size_t size);
     void reserve(size_t new_capacity);
