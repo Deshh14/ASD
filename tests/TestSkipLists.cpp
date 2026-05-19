@@ -9,7 +9,6 @@
 #include <algorithm>
 #include "PriorityQueue.h"
 
-
 template<typename T>
 void heapSort(Tvector<T>& arr) {
     Heap<T> heap(arr);
@@ -187,6 +186,7 @@ int main(int argc, char** argv) {
     //}
     //std::cout << "\n";
 
+    /*
     Tvector<std::string> inputData = {
         "12.30 - Иванов по записи",
         "12.35 - Петров без записи",
@@ -296,6 +296,8 @@ int main(int argc, char** argv) {
         }
     }
     std::cout << std::endl;
+    */
         ::testing::InitGoogleTest(&argc, argv);
         return RUN_ALL_TESTS();
 }
+
